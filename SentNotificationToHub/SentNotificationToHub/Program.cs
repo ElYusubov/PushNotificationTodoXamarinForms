@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Azure.NotificationHubs;
+using System.Configuration;
 
 namespace SentNotificationToHub
 {
@@ -7,13 +8,17 @@ namespace SentNotificationToHub
     {
         static void Main(string[] args)
         {
-            SendNotificationAsync();
+
+            var appSettings = ConfigurationSettings.AppSettings;
+
+            var connectionString = appSettings["Microsoft.Azure.NotificationHubs.ConnectionString"]; 
+            SendNotificationAsync(connectionString);
             Console.ReadLine();
         }
 
-        private static async void SendNotificationAsync()
+        private static async void SendNotificationAsync(string connectionString)
         {
-            NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://ns-notification-hub-17.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=7JgMPUZd4coxOv17V0gGQ5Pyd62adkc8Uw5Sa5Kc0XY=", "notification-hub-17");
+            NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString(connectionString, "notification-hub-17");
             await hub.SendGcmNativeNotificationAsync("{ \"data\" : {\"message\":\"Hello Evv Team!\"}}");
         }
     }
