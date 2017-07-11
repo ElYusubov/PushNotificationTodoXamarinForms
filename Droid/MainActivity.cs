@@ -26,14 +26,14 @@ namespace push_notification_todo.Droid
 
             base.OnCreate (bundle);
 
-			// Initialize Azure Mobile Apps
-			Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
+            // Initialize Azure Mobile Apps
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
 
-			// Initialize Xamarin Forms
-			global::Xamarin.Forms.Forms.Init (this, bundle);
+            // Initialize Xamarin Forms
+            global::Xamarin.Forms.Forms.Init(this, bundle);
 
-			// Load the main application
-			LoadApplication (new App ());
+            // Load the main application
+            LoadApplication(new App());
 
             try
             {
@@ -66,7 +66,7 @@ namespace push_notification_todo.Droid
         }
 
         // Create a new instance field for this activity.
-        static MainActivity instance = null;
+        public static MainActivity instance = null;
 
         // Return the current activity instance.
         public static MainActivity CurrentActivity
@@ -75,6 +75,17 @@ namespace push_notification_todo.Droid
             {
                 return instance;
             }
+        }
+
+        private void RegisterWithGCM()
+        {
+            // Check to ensure everything's set up right
+            GcmClient.CheckDevice(this);
+            GcmClient.CheckManifest(this);
+
+            // Register for push notifications
+            //Log.Info("MainActivity", "Registering...");
+            GcmClient.Register(this, Constants.SenderId);
         }
 
     }
