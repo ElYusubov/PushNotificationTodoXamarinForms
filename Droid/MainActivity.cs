@@ -1,17 +1,12 @@
 ﻿using System;
-
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using Gcm.Client;
 
 namespace push_notification_todo.Droid
 {
-	[Activity (Label = "My Visits",
+    [Activity (Label = "My Visits",
 		Icon = "@drawable/icon",
 		MainLauncher = true,
 		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
@@ -43,7 +38,7 @@ namespace push_notification_todo.Droid
 
                 // Register for push notifications
                 System.Diagnostics.Debug.WriteLine("Registering...");
-                GcmClient.Register(this, PushHandlerBroadcastReceiver.SENDER_IDS);
+                GcmClient.Register(this, ToDoBroadcastReceiver.SENDER_IDS);
             }
             catch (Java.Net.MalformedURLException)
             {
@@ -75,18 +70,7 @@ namespace push_notification_todo.Droid
             {
                 return instance;
             }
-        }
-
-        private void RegisterWithGCM()
-        {
-            // Check to ensure everything's set up right
-            GcmClient.CheckDevice(this);
-            GcmClient.CheckManifest(this);
-
-            // Register for push notifications
-            //Log.Info("MainActivity", "Registering...");
-            GcmClient.Register(this, Constants.SenderId);
-        }
+        }      
 
     }
 }

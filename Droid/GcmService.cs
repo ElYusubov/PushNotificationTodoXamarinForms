@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Media;
 using Android.Support.V4.App;
 using Android.Util;
@@ -25,22 +20,13 @@ using System.Diagnostics;
 [assembly: UsesPermission(Name = "android.permission.GET_ACCOUNTS")]
 namespace push_notification_todo.Droid
 {
-    [BroadcastReceiver(Permission = Gcm.Client.Constants.PERMISSION_GCM_INTENTS)]
-    [IntentFilter(new string[] { Gcm.Client.Constants.INTENT_FROM_GCM_MESSAGE }, Categories = new string[] { "@PACKAGE_NAME@" })]
-    [IntentFilter(new string[] { Gcm.Client.Constants.INTENT_FROM_GCM_REGISTRATION_CALLBACK }, Categories = new string[] { "@PACKAGE_NAME@" })]
-    [IntentFilter(new string[] { Gcm.Client.Constants.INTENT_FROM_GCM_LIBRARY_RETRY }, Categories = new string[] { "@PACKAGE_NAME@" })]
-    public class PushHandlerBroadcastReceiver : GcmBroadcastReceiverBase<GcmService>
-    {
-        public static string[] SENDER_IDS = new string[] { "763349422427" };
-    }
-
     [Service]
     public class GcmService : GcmServiceBase
     {
         public static string RegistrationID { get; private set; }
 
         public GcmService()
-            : base(PushHandlerBroadcastReceiver.SENDER_IDS) { }
+            : base(ToDoBroadcastReceiver.SENDER_IDS) { }
 
         protected override void OnRegistered(Context context, string registrationId)
         {

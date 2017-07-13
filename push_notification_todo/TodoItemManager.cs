@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
+using System.Net.Http;
 
 #if OFFLINE_SYNC_ENABLED
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
@@ -39,6 +40,7 @@ namespace push_notification_todo
         private TodoItemManager()
         {
             this.client = new MobileServiceClient(Constants.ApplicationURL);
+            var instalationId = this.client.InstallationId;
 
 #if OFFLINE_SYNC_ENABLED
             var store = new MobileServiceSQLiteStore(offlineDbPath);
@@ -51,7 +53,8 @@ namespace push_notification_todo
 #else
             this.todoTable = client.GetTable<TodoItem>();
 #endif
-        }
+
+        }       
 
         public static TodoItemManager DefaultManager
         {
