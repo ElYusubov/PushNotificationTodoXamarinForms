@@ -39,8 +39,7 @@ namespace push_notification_todo
 
         private TodoItemManager()
         {
-            this.client = new MobileServiceClient(Constants.ApplicationURL);
-            var instalationId = this.client.InstallationId;
+            this.client = new MobileServiceClient(Constants.ApplicationURL);           
 
 #if OFFLINE_SYNC_ENABLED
             var store = new MobileServiceSQLiteStore(offlineDbPath);
@@ -53,7 +52,11 @@ namespace push_notification_todo
 #else
             this.todoTable = client.GetTable<TodoItem>();
 #endif
-
+            // TODO: 
+            // Add intallation id with registration datetime ?
+            // Add another table for Registration info OR simply add varchar column to exisiting table?
+            var tableName = this.todoTable.TableName;
+            var instalationId = this.client.InstallationId;
         }       
 
         public static TodoItemManager DefaultManager
