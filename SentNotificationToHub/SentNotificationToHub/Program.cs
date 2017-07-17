@@ -10,16 +10,36 @@ namespace SentNotificationToHub
         static void Main(string[] args)
         {            
             var appSettings = ConfigurationSettings.AppSettings;
-            var connectionString = appSettings["Microsoft.Azure.NotificationHubs.ConnectionString"]; 
-            SendNotificationAsync(connectionString);
+            //var connectionString = appSettings["Microsoft.Azure.NotificationHubs.ConnectionString"]; 
 
-            Console.WriteLine("Notification with a note 'TAGS are broadcast-test-evv-provider-oxford' is sent.");
-            Console.WriteLine("--------------------------------------------------");
+            var connectionString = appSettings["HubSendConnection"];
+            var hubPath = appSettings["HubPath"];
+
+            Console.Write("Please enter the tag name :");
+            string inputTag = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(connectionString) || string.IsNullOrWhiteSpace(hubPath))
+            {
+                Console.WriteLine("ERROR - Notification connectionstring OR HubPath is not defined.");
+                Console.WriteLine("--------------------------------------------------");
+            }
+            else if (string.IsNullOrWhiteSpace(inputTag))
+            {
+                Console.WriteLine("ERROR - 'tag name' entry is null OR empty.");
+                Console.WriteLine("--------------------------------------------------");
+            }
+            else
+            {
+                SendNotificationAsync(connectionString, hubPath, inputTag.Trim());
+                Console.WriteLine(string.Format("Notification with a tag {0} is sent.", inputTag.Trim()));
+                Console.WriteLine("--------------------------------------------------");               
+            }
+
             Console.WriteLine("PRESS ANY KEY TO EXIT.");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
-        private static async void SendNotificationAsync(string connectionString)
+        private static async void SendNotificationAsync(string connectionString, string hubPath, string tag)
         {
 
             // Note: used to sent Notification to all registered devices
@@ -27,11 +47,13 @@ namespace SentNotificationToHub
             //NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString(connectionString, "notification-hub-17");
             //await hub.SendGcmNativeNotificationAsync(jsonPayLoad);
 
-            var tags = new List<string>() { "broadcast", "test", "evv", "provider", "oxford" };
+            // "broadcast", "test", "evv", "provider", "oxford"
+            var tags = new List<string>() { tag };
             var jsonPayLoadTags = "{ \"data\" : {\"message\":\"TAGS are broadcast-test-evv-provider-oxford \"}}";
 
             NotificationHubClient hubClient2 = NotificationHubClient.
-                CreateClientFromConnectionString(connectionString, "notification-hub-17");
+                CreateClientFromConnectionString(connectionString, hubPath);
+
             await hubClient2.SendGcmNativeNotificationAsync(jsonPayLoadTags, tags);
         }
     }
